@@ -1,0 +1,12 @@
+[project]
+name = "zelda"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "kivent-core",
+    "kivy>=2.3.1",
+]
+
+[tool.uv.sources]
+kivent-core = { path = "kivent/modules/core", editable = false }
+
