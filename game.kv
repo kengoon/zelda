@@ -1,0 +1,90 @@
+#:import kivent_core kivent_core
+Game:
+    gameworld: gameworld
+    GameWorld:
+        id: gameworld
+        gamescreenmanager: gamescreenmanager
+        size_of_gameworld: 100*1024
+        size_of_entity_block: 128
+        system_count: 6
+        pos: root.pos
+        zones: {'general': 10000}
+        PositionSystem2D:
+            system_id: 'position'
+            gameworld: gameworld
+            zones: ['general']
+            size_of_component_block: 128
+        MyAnimationSystem:
+            system_id: 'animation'
+            gameworld: gameworld
+            updateable: True
+        Renderer:
+            id: renderer_high
+            gameworld: gameworld
+            system_id: 'renderer_high'
+            zones: ['general']
+            frame_count: 3
+            updateable: True
+            force_update: True
+            size_of_batches: 128
+            size_of_component_block: 128
+            system_names: ["renderer_high", "position"]
+            shader_source: 'assets/glsl/positionshader.glsl'
+            gameview: 'camera'
+        Renderer:
+            id: renderer_mid
+            gameworld: gameworld
+            system_id: 'renderer_mid'
+            zones: ['general']
+            frame_count: 3
+            updateable: True
+            force_update: True
+            size_of_batches: 128
+            size_of_component_block: 128
+            system_names: ["renderer_mid", "position"]
+            shader_source: 'assets/glsl/positionshader.glsl'
+            gameview: 'camera'
+        Renderer:
+            id: renderer_low
+            gameworld: gameworld
+            system_id: 'renderer_low'
+            zones: ['general']
+            frame_count: 3
+            updateable: True
+            force_update: True
+            size_of_batches: 128
+            size_of_component_block: 128
+            system_names: ["renderer_low", "position"]
+            shader_source: 'assets/glsl/positionshader.glsl'
+            gameview: 'camera'
+        GameView:
+            system_id: 'camera'
+            gameworld: gameworld
+            size: root.size
+            pos: root.pos
+            window_size: root.size
+            camera_scale: 0.7
+            camera_pos: 0, 0
+            do_scroll_lock: False
+            do_scroll: True
+            updateable: True
+            camera_speed_multiplier: 1
+    GameScreenManager:
+        id: gamescreenmanager
+        size: root.size
+        pos: root.pos
+        gameworld: gameworld
+        GameScreen:
+            name: 'main'
+            DebugPanel:
+                id: panel
+                size_hint: (.2, .1)
+                pos_hint: {'x': .225, 'y': .025}
+                Label:
+                    pos: panel.pos
+                    size: panel.size
+                    font_size: panel.size[1]*.5
+                    halign: 'center'
+                    valign: 'middle'
+                    color: (1,1,1,1)
+                    text: 'FPS: ' + panel.fps if panel.fps != None else 'FPS:'
