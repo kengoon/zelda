@@ -1,14 +1,17 @@
+from kivy.config import Config
+
+Config.set("graphics", "fullscreen", "auto")
+# Config.set("graphics", "width", "1280")
+# Config.set("graphics", "height", "720")
+
+from kivent_core.systems.gamesystem import GameSystem
 from kivy.app import App
 from kivy.clock import Clock, triggered
-from kivy.config import Config
 from kivy.factory import Factory
 from kivy.properties import ListProperty, ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
 
-Config.set("graphics", "width", "1280")
-Config.set("graphics", "height", "720")
-
-from kivent_core.systems.gamesystem import GameSystem
+from level import Level
 
 
 class MyAnimationSystem(GameSystem):
@@ -19,10 +22,10 @@ class MyAnimationSystem(GameSystem):
 
     def update(self, dt):
         for make_update in self._update_to_make:
-            make_update()
+            make_update(dt)
 
 
-Factory.register('MyAnimationSystem', cls=MyAnimationSystem)
+Factory.register("MyAnimationSystem", cls=MyAnimationSystem)
 
 
 class Game(Widget):
@@ -33,8 +36,15 @@ class Game(Widget):
 
     def on_kv_post(self, base_widget):
         self.gameworld.init_gameworld(
-            ['position', 'renderer_low', 'renderer_mid', 'renderer_high', 'camera', 'animation'],
-            callback=self.init_game
+            [
+                "position",
+                "renderer_low",
+                "renderer_mid",
+                "renderer_high",
+                "camera",
+                "animation",
+            ],
+            callback=self.init_game,
         )
 
     def init_game(self):
@@ -42,22 +52,36 @@ class Game(Widget):
         self.set_state()
         self.level = Level(self)
         self.level.draw()
-        self.camera = self.gameworld.system_manager['camera']
-        self.animation_system = self.gameworld.system_manager['animation']
+        self.camera = self.gameworld.system_manager["camera"]
+        self.animation_system = self.gameworld.system_manager["animation"]
         self.animation_system.register_update_to_make(self.level.update)
 
     def setup_states(self):
         self.gameworld.add_state(
-            state_name='main',
-            systems_added=['position', 'animation', 'renderer_low', 'renderer_mid', 'renderer_high', 'camera'],
+            state_name="main",
+            systems_added=[
+                "position",
+                "animation",
+                "renderer_low",
+                "renderer_mid",
+                "renderer_high",
+                "camera",
+            ],
             systems_removed=[],
             systems_paused=[],
-            systems_unpaused=['position', 'animation', 'renderer_low', 'renderer_mid', 'renderer_high', 'camera'],
-            screenmanager_screen='main'
+            systems_unpaused=[
+                "position",
+                "animation",
+                "renderer_low",
+                "renderer_mid",
+                "renderer_high",
+                "camera",
+            ],
+            screenmanager_screen="main",
         )
 
     def set_state(self):
-        self.gameworld.state = 'main'
+        self.gameworld.state = "main"
 
 
 class DebugPanel(Widget):
@@ -76,5 +100,5 @@ class GameApp(App):
     pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     GameApp().run()
